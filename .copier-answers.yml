@@ -1,0 +1,12 @@
+# Changes here will be overwritten by Copier
+AnswerStrategy: recommended
+AuthorEmail: 1806656034@qq.com
+AuthorName: hz-xiaxz
+Indentation: 4
+JuliaMinVersion: '1.6'
+License: MIT
+PackageName: HFDisorderHubbard
+PackageOwner: hz-xiaxz
+PackageUUID: 18192ab2-0279-51e7-8135-de5f5fd894cd
+_commit: v0.9.1
+_src_path: https://github.com/abelsiqueira/BestieTemplate.jl

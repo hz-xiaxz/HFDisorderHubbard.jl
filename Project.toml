@@ -1,0 +1,7 @@
+name = "HFDisorderHubbard"
+uuid = "18192ab2-0279-51e7-8135-de5f5fd894cd"
+authors = ["hz-xiaxz <1806656034@qq.com> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1.6"

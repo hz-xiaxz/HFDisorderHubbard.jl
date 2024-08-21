@@ -1,5 +1,6 @@
 using Random
 using LinearAlgebra
+using ArnoldiMethod
 
 @doc raw"""
 3D Anderson-Hubbard Model. Hamiltonian see index part.
@@ -19,21 +20,21 @@ struct HubbardPara
     t::Float64
     U::Float64
     W::Float64
-    n_up::Float64
-    n_down::Float64
-    S_up::Complex{Float64}
-    S_down::Complex{Float64}
+    n_up::Vector{Float64}
+    n_down::Vector{Float64}
+    S_up::Vector{Complex{Float64}}
+    S_down::Vector{Complex{Float64}}
     omega::Vector{Float64}
     function HubbardPara(;
         t::Float64,
         U::Float64,
         W::Float64,
-        n_up::Float64,
-        n_down::Float64,
-        S_up::Complex{Float64},
+        n_up::Vector{Float64},
+        n_down::Vector{Float64},
+        S_up::Vector{Complex{Float64}},
         omega::Vector{Float64},
     )
-        S_down = conj(S_up)
+        S_down = conj.(S_up)
         return new(t, U, W, n_up, n_down, S_up, S_down, omega)
     end
 end
@@ -54,13 +55,13 @@ function getHmat(lat::CubicLattice, para::HubbardPara)
         end
         # hubbard interaction
         # n_{iσ} parts
-        H[i, i] += para.U * para.n_down
-        H[i+N, i+N] += para.U * para.n_up
+        H[i, i] += para.U * para.n_down[i]
+        H[i+N, i+N] += para.U * para.n_up[i]
         # S^{+} S^{-} parts
         # S^+
-        H[i, i+N] += -para.U * para.S_down
+        H[i, i+N] += -para.U * para.S_down[i]
         # S^-
-        H[i+N, i] += -para.U * para.S_up
+        H[i+N, i] += -para.U * para.S_up[i]
         # onsite disorder part
         H[i, i] += para.omega[i]
         H[i+N, i+N] += para.omega[i]
@@ -72,15 +73,14 @@ end
 """
     UnitaryDecomp(lat::CubicLattice, para::HubbardPara)
 
-Use Schur Decomposition to get `H = U^† T U` , where `T` is generally `T` is upper triangular but as `H` is Hermitian, `T` is diagonal (Note the `U` is not the same as the definition in Schur Decomposition).
+Use Schur Decomposition to get `H = U T U^†` , where `T` is generally `T` is upper triangular but as `H` is Hermitian, `T` is diagonal
+
+We only need orbitals under Fermion Surface, here output `U` of size `(2N, N)`. Each row of `U` is a transposed conjugated eigenvector of `H`.
 """
 function UnitaryDecomp(lat::CubicLattice, para::HubbardPara)
     # maybe turn to ArnolidiMethod if bottlenecked
     H = getHmat(lat, para)
-    N = lat.N
-    F = schur(H)
-    eigenvalues = diag(real.(F.Schur))
-    U = F.vectors
-    # we only need orbitals under Fermion Surface
-    return eigenvalues, U'
+    decomp, history = ArnoldiMethod.partialschur(H, nev = lat.N, which = :SR)
+    eigenvalues = real.(decomp.eigenvalues) # sorted from smallest to largest
+    return eigenvalues, decomp.Q
 end

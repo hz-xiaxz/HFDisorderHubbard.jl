@@ -11,9 +11,9 @@ para = HFDisorderHubbard.HubbardPara(
     U = 1.0,
     t = 1.0,
     W = 1.0,
-    n_up = 0.6,
-    n_down = 0.4,
-    S_up = 1.0 - 1.0im,
+    n_up = fill(0.6, N),
+    n_down = fill(0.4, N),
+    S_up = fill(1.0 + 1.0im, N),
     omega = omega,
 )
 H = HFDisorderHubbard.getHmat(lat, para)
@@ -31,21 +31,21 @@ H = HFDisorderHubbard.getHmat(lat, para)
             -1.4692882055065464,
         ],
     )
-    @test H[1, 1] == omega[1] + para.U * para.n_down
-    @test H[1+N, 1+N] == omega[1] + para.U * para.n_up
+    @test H[1, 1] == omega[1] + para.U * para.n_down[1]
+    @test H[1+N, 1+N] == omega[1] + para.U * para.n_up[1]
     @test H[1, 2] == -2para.t # 2 is due to periodical boundary condition
     @test H[1+N, 2+N] == -2para.t
-    @test H[1, 1+N] == -para.U * para.S_down
+    @test H[1, 1+N] == -para.U * para.S_down[1]
     @test H[1+N, 1] == conj(H[1, 1+N])
     @test allequal(H .== H')
 end
 
 
 @testset "Unitary Decomposition" begin
-    ev, es = HFDisorderHubbard.UnitaryDecomp(lat, para)
-    # test es is normalized
-    # es is somehow complex valued
-    @test isapprox(es * es', I, atol = 1e-8)
-    @test isapprox(es' * diagm(ev) * es, H, atol = 1e-8)
+    ev, U = HFDisorderHubbard.UnitaryDecomp(lat, para)
     @test allequal(ev .== sort(ev))
+    @test size(U) == (2N, N)
+    for i = 1:N
+        @test sum(abs2, U[:, i]) ≈ 1.0
+    end
 end

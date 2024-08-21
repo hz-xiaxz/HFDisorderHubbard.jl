@@ -70,6 +70,7 @@ function getHmat(lat::CubicLattice, para::HubbardPara)
 end
 
 function UnitaryDecomp(lat::CubicLattice, para::HubbardPara)
+    # maybe turn to ArnolidiMethod if bottlenecked
     H = getHmat(lat, para)
     F = schur(H)
     # H = U T U^†

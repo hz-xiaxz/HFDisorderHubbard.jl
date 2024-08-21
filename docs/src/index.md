@@ -12,14 +12,14 @@ Implement Hatree Fock study of 3D Hubbard model with onsite disorder.
 
 First, given the Hartree-Fock mean field Hamiltonian [1] with onsite disorder
 
-\[
+```math
 \begin{aligned}
 H_{HF} &= -t \sum_{\langle i,j \rangle, \sigma} \left(  c_{i\sigma}^\dagger c_{j\sigma}+h.c.\right)\\
   &+ U \sum_i \left( n_{i\uparrow} \left< n_{i \downarrow} \right> + \left< n_{i\uparrow}\right> n_{i \downarrow} - \left<S_i^+ \right> S_i^-  - \left< S_i^-\right> S_i^+ \right) \\
 & -U \sum_i \left(   \left< n_{i\uparrow}\right> \left< n_{i \downarrow} \right> - \left<S_i^+ \right>\left<S_i^- \right> \right) \\
 & + \sum_{i} \left( \omega_i n_i \right)
 \end{aligned}
-\]
+```
 
 where $\omega_i$ is drawn from a Gaussian Distribution $N(0,W)$. One can easily diagonalize this Hamiltonian with the fact that $n_{i\sigma}=c^\dagger_{i\sigma}c_{i\sigma}$, $S^+_{i} = c^\dagger_{i\uparrow}c_{i\downarrow}$ and $S^-_{i} = c^\dagger_{i\downarrow}c_{i\uparrow}$ *Note: This matrix is Hermitian since* $\left( S^+ \right)^\dagger = S^- $
 

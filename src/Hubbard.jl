@@ -69,13 +69,16 @@ function getHmat(lat::CubicLattice, para::HubbardPara)
     return H
 end
 
+"""
+    UnitaryDecomp(lat::CubicLattice, para::HubbardPara)
+
+Use Schur Decomposition to get `H = U^† T U` , where `T` is generally `T` is upper triangular but as `H` is Hermitian, `T` is diagonal (Note the `U` is not the same as the definition in Schur Decomposition).
+"""
 function UnitaryDecomp(lat::CubicLattice, para::HubbardPara)
     # maybe turn to ArnolidiMethod if bottlenecked
     H = getHmat(lat, para)
     F = schur(H)
-    # H = U T U^†
-    # generally T is upper triangular but as H is Hermitian, T is diagonal
     eigenvalues = diag(F.Schur)
     U = F.vectors
-    return eigenvalues, U
+    return eigenvalues, U'
 end

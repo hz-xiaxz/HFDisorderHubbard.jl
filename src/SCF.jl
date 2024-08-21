@@ -22,7 +22,7 @@ function getSupMean(U::AbstractMatrix)
     # just calculate ⟨S_i^+⟩ = ∑_{α} (U_{α_i}^* × U_{i+N,α})
     N = size(U, 2)
     # Sup is of N long
-    return [sum(@. conj(U[:, i]) * U[i+N, :]) for i = 1:N]
+    return [sum(@. conj(U[i, :]) * U[i+N, :]) for i = 1:N] # TODO:check this!
 end
 
 
@@ -52,7 +52,8 @@ end
     step on SCF, if converge, returns true.
 """
 function step!(data::SCFdata, lat::CubicLattice, para::HubbardPara)
-    eigenvalues, U = UnitaryDecomp(lat, para, data)
+    H = getHmat(lat, para, data)
+    eigenvalues, U = UnitaryDecomp(H)
     n_up, n_down = getNMean(U)
     S_up = getSupMean(U)
     flag = checkConverge(data, n_up, n_down, S_up)

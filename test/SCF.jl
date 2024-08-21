@@ -19,3 +19,20 @@ using Random
     @test allequal(imag.(init_guess.S_up) .<= 0.5)
     @test allequal(imag.(init_guess.S_up) .>= -0.5)
 end
+
+@testset "getSupMean" begin
+    lat = HFDisorderHubbard.CubicLattice(2)
+    rng = Random.Xoshiro(42)
+    N = lat.N
+    omega = randn(rng, N)
+    para = HFDisorderHubbard.HubbardPara(U = 1.0, t = 1.0, W = 1.0, omega = omega)
+    data = HFDisorderHubbard.SCFdata(
+        n_up = fill(0.6, N),
+        n_down = fill(0.4, N),
+        S_up = fill(0.25 + 0.25im, N),
+    )
+    H = HFDisorderHubbard.getHmat(lat, para, data)
+    ev, U = HFDisorderHubbard.UnitaryDecomp(H)
+    S_up = HFDisorderHubbard.getSupMean(U)
+    @test length(S_up) == 8
+end

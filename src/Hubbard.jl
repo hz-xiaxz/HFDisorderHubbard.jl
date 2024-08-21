@@ -77,8 +77,10 @@ Use Schur Decomposition to get `H = U^† T U` , where `T` is generally `T` is u
 function UnitaryDecomp(lat::CubicLattice, para::HubbardPara)
     # maybe turn to ArnolidiMethod if bottlenecked
     H = getHmat(lat, para)
+    N = lat.N
     F = schur(H)
-    eigenvalues = diag(F.Schur)
+    eigenvalues = diag(real.(F.Schur))
     U = F.vectors
+    # we only need orbitals under Fermion Surface
     return eigenvalues, U'
 end

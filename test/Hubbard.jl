@@ -46,6 +46,6 @@ end
     # test es is normalized
     # es is somehow complex valued
     @test isapprox(es * es', I, atol = 1e-8)
-    @test allequal(@. ev isa Real)
     @test isapprox(es' * diagm(ev) * es, H, atol = 1e-8)
+    @test allequal(ev .== sort(ev))
 end

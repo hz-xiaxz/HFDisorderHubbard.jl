@@ -4,6 +4,10 @@
 # Maybe use BloqadeLattice as backend for it's more easy to represent Rydberg atoms in a lattice
 # does it have convient support for pbc lattice? leave it as TODO
 
+"""
+    CubicLattice(L::Int)
+CubicLattice with PBC boundary
+"""
 struct CubicLattice
     L::Int
     N::Int

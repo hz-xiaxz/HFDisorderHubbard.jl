@@ -1,11 +1,7 @@
-# Don't forget to run
-#
-#     pkg> dev ..
-#
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-LiveServer = "16fef848-5104-11e9-1b77-fb7a48bbb589"
 HFDisorderHubbard = "18192ab2-0279-51e7-8135-de5f5fd894cd"
+LiveServer = "16fef848-5104-11e9-1b77-fb7a48bbb589"
 
 [compat]
 Documenter = "1"

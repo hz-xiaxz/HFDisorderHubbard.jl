@@ -22,7 +22,7 @@ function getSupMean(U::AbstractMatrix)
     # just calculate ⟨S_i^+⟩ = ∑_{α} (U_{α_i}^* × U_{i+N,α})
     N = size(U, 2)
     # Sup is of N long
-    return [sum(@. conj(U[:, i]) * U[i+N, :]) for i = 1:N]
+    return [sum(@. conj(U[i, :]) * U[i+N, :]) for i = 1:N] # TODO:check this!
 end
 
 
@@ -44,7 +44,7 @@ function init(rng::AbstractRNG, lat::CubicLattice)
     Sx = @. r * cos(θ)
     Sy = @. r * sin(θ)
     S_up = Sx + Sy * im
-    return SCFdata(; n_up = n_up, n_down = n_up, S_up = S_up)
+    return SCFdata(; n_up = n_up, n_down = n_down, S_up = S_up)
 end
 
 """
@@ -52,7 +52,8 @@ end
     step on SCF, if converge, returns true.
 """
 function step!(data::SCFdata, lat::CubicLattice, para::HubbardPara)
-    eigenvalues, U = UnitaryDecomp(lat, para, data)
+    H = getHmat(lat, para, data)
+    eigenvalues, U = UnitaryDecomp(H)
     n_up, n_down = getNMean(U)
     S_up = getSupMean(U)
     flag = checkConverge(data, n_up, n_down, S_up)
@@ -71,7 +72,7 @@ function checkConverge(
     n_up::Vector{Float64},
     n_down::Vector{Float64},
     S_up::Vector{Complex{Float64}},
-    tol::Float64 = 1e-2,
+    tol::Float64 = 1e-5,
 )
     # check if the difference is smaller than 1e-6
     N = length(n_up)

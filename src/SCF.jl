@@ -72,7 +72,7 @@ function checkConverge(
     n_up::Vector{Float64},
     n_down::Vector{Float64},
     S_up::Vector{Complex{Float64}},
-    tol::Float64 = 1e-5,
+    tol::Float64 = 1e-8,
 )
     # check if the difference is smaller than 1e-6
     N = length(n_up)

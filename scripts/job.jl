@@ -9,7 +9,7 @@ function run()
     lat = CubicLattice(L)
     data = init(rng, lat)
     iter = 10
-    steps = 10
+    steps = 1000
     for i = 1:iter
         t = 1.0
         U = 1.0
@@ -21,7 +21,7 @@ function run()
             flag = step!(data, lat, para)
             stored[string(j)] = deepcopy(data)
             if flag
-                @show "converged"
+                @show "converged at step $(j)"
                 break
             end
         end

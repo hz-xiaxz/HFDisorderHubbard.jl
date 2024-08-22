@@ -44,7 +44,7 @@ function init(rng::AbstractRNG, lat::CubicLattice)
     Sx = @. r * cos(θ)
     Sy = @. r * sin(θ)
     S_up = Sx + Sy * im
-    return SCFdata(; n_up = n_up, n_down = n_up, S_up = S_up)
+    return SCFdata(; n_up = n_up, n_down = n_down, S_up = S_up)
 end
 
 """
@@ -72,7 +72,7 @@ function checkConverge(
     n_up::Vector{Float64},
     n_down::Vector{Float64},
     S_up::Vector{Complex{Float64}},
-    tol::Float64 = 1e-2,
+    tol::Float64 = 1e-5,
 )
     # check if the difference is smaller than 1e-6
     N = length(n_up)

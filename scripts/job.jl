@@ -1,4 +1,5 @@
 using DrWatson
+@quickactivate "HFDisorderHubbard"
 using HFDisorderHubbard
 using Random
 
@@ -15,18 +16,21 @@ function run()
         W = 1.0
         para = HubbardPara(t = t, U = U, W = W, omega = randn(rng, L^3))
         params = @strdict L U W i
-        for _ = 1:steps
+        stored = Dict{String,SCFdata}()
+        for j = 1:steps
             flag = step!(data, lat, para)
+            stored[string(j)] = deepcopy(data)
             if flag
+                @show "converged"
                 break
             end
-            dicted_data =
-                Dict("n_up" => data.n_up, "n_down" => data.n_down, "S_up" => data.S_up)
-            @tagsave(datadir("test", savename(params, "jld2")), dicted_data)
         end
+        @tagsave(datadir("test", savename(params, "jld2")), stored)
     end
 end
 
 run()
-firstsim = readdir(datadir("test"))[1]
-@show wload(datadir("test", firstsim))
+using DataFrames
+df = collect_results(datadir("test"))
+
+# TODO: work_load and visualize

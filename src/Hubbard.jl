@@ -1,6 +1,5 @@
 using Random
 using LinearAlgebra
-using ArnoldiMethod
 
 @doc raw"""
 3D Anderson-Hubbard Model. Hamiltonian see index part.

@@ -74,13 +74,21 @@ end
     UnitaryDecomp(lat::CubicLattice, para::HubbardPara)
 
 Use Schur Decomposition to get `H = U T U^†` , where `T` is generally `T` is upper triangular but as `H` is Hermitian, `T` is diagonal
-
-We only need orbitals under Fermion Surface, here output `U` of size `(2N, N)`. Each row of `U` is a transposed conjugated eigenvector of `H`.
 """
+# function UnitaryDecomp(H)
+#     # maybe turn to ArnolidiMethod if bottlenecked
+#     N = size(H, 1) ÷ 2
+#     decomp, history = ArnoldiMethod.partialschur(H, nev = N, which = :SR)
+#     @info history
+#     eigenvalues = real.(decomp.eigenvalues) # sorted from smallest to largest
+#     return eigenvalues, decomp.Q
+# end
+# LinearAlgebra.eigen is much faster.....
 function UnitaryDecomp(H)
-    # maybe turn to ArnolidiMethod if bottlenecked
+    F = schur(H)
+    # generally T is upper triangular but as H is Hermitian, T is diagonal
+    eigenvalues = real.(diag(F.Schur))
     N = size(H, 1) ÷ 2
-    decomp, history = ArnoldiMethod.partialschur(H, nev = N, which = :SR)
-    eigenvalues = real.(decomp.eigenvalues) # sorted from smallest to largest
-    return eigenvalues, decomp.Q
+    U = F.vectors[:, 1:N]
+    return eigenvalues, U
 end

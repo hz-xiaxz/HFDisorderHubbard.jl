@@ -417,3 +417,5 @@ $RECYCLE.BIN/
 Manifest.toml
 Manifest-v1.11.toml
 node_modules/.cache/prettier/.prettier-caches/8bab8f291bfb76d8a1b453002a528a9275aad871.json
+notebooks
+data

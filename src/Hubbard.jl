@@ -16,27 +16,17 @@ using ArnoldiMethod
 
 [1] F.Fazileh et al. 2006 Physical Review Letters
 """
-struct HubbardPara
+@kwdef struct HubbardPara
     t::Float64
     U::Float64
     W::Float64
     omega::Vector{Float64}
-    function HubbardPara(; t::Float64, U::Float64, W::Float64, omega::Vector{Float64})
-        new(t, U, W, omega)
-    end
 end
 
-mutable struct SCFdata
+@kwdef mutable struct SCFdata
     n_up::Vector{Float64}
     n_down::Vector{Float64}
     S_up::Vector{Complex{Float64}}
-    function SCFdata(;
-        n_up::Vector{Float64},
-        n_down::Vector{Float64},
-        S_up::Vector{Complex{Float64}},
-    )
-        new(n_up, n_down, S_up)
-    end
 end
 
 function getHmat(lat::CubicLattice, para::HubbardPara, data::SCFdata)
